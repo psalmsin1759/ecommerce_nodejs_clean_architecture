@@ -10,8 +10,8 @@ export class CategoryMongooseRepo implements CategoryRepository {
     const slug = data.name!
       .trim()
       .toLowerCase()
-      .replace(/\s+/g, "-")   // replace spaces with -
-      .replace(/[^\w-]+/g, ""); // remove special chars (optional)
+      .replace(/\s+/g, "-")  
+      .replace(/[^\w-]+/g, ""); 
 
     const category = await CategoryModel.create({
       ...data,
