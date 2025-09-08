@@ -46,13 +46,13 @@ src/
 
 
 ## Features
-1. Authentication & Authorization
+- Authentication & Authorization
 
 JWT-based authentication
 
 Role-based access for admin, staff, and customers
 
-2. Product Management
+- Product Management
 
 Create, update, delete products
 
@@ -62,13 +62,13 @@ Support for variants, images, and attributes
 
 Fetch products by ID, slug, or category
 
-3. Category Management
+- Category Management
 
 CRUD for product categories
 
 Validation with DTOs
 
-4. Orders & Transactions
+- Orders & Transactions
 
 Create and track orders
 
@@ -76,43 +76,43 @@ Update order statuses
 
 Integration with payment gateways
 
-5. Customers & Staff
+- Customers & Staff
 
 Manage customer data
 
 Add, update, and disable staff accounts
 
-6. Discounts / Coupons
+- Discounts / Coupons
 
 Create and apply discount codes
 
 Percentage or fixed discounts
 
-7. Inventory & Stock
+- Inventory & Stock
 
 Track product stock quantities
 
 Update stock after orders
 
-8. Analytics & Reports
+- Analytics & Reports
 
 Dashboard with sales, orders, and expenses metrics
 
 Generate reports for accounting or marketing
 
-9. Email Notifications
+- Email Notifications
 
 Send order confirmations and updates
 
 Integration with SMTP or third-party email providers
 
-10. Leads Management
+- Leads Management
 
 Add and track leads for marketing or sales
 
 
 ## Layers & Responsibilities
-1. Domain Layer
+- Domain Layer
 
 Core business rules
 
@@ -120,7 +120,7 @@ Entities (Product, Category, Order, Customer, Staff)
 
 Repository interfaces (abstracting database access)
 
-2. Application Layer
+- Application Layer
 
 Use-cases (business logic implementations)
 
@@ -128,7 +128,7 @@ DTOs and validators (zod)
 
 Orchestrates interactions between domain and infrastructure
 
-3. Infrastructure Layer
+- Infrastructure Layer
 
 Database (MongoDB via Mongoose)
 
@@ -136,7 +136,7 @@ External services (email, analytics)
 
 Implements repository interfaces
 
-4. Presentation Layer
+- Presentation Layer
 
 HTTP API with Express
 
