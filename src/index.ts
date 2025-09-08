@@ -1,6 +1,10 @@
 import express, { Request, Response, NextFunction } from "express";
 import { createServer } from "http";
+import { config } from "@/src/config/env";
 import cors from "cors"; 
+import { connectDB } from "@/src/config/db";
+import { setupSwagger } from "@/src/presentation/config/swagger";
+import categoryRouter from "@/src/presentation/http/routes/categoryRoutes"
 
 const app = express();
 const httpServer = createServer(app);
@@ -10,12 +14,22 @@ app.use(cors({
   credentials: true
 }));
 
+setupSwagger(app);
+
+connectDB().catch((err) => {
+  console.error("Failed to connect to database:", err);
+  process.exit(1);
+});
+
+app.use(express.json());
+app.use("/api/categories", categoryRouter);
+
 app.get("/", (req: Request, res: Response) => {
   res.send("Server running...");
 });
 
-httpServer.listen(3001, () => {
-  console.log(`Server listening on port 3001`);
+httpServer.listen(config.port, () => {
+  console.log(`Server listening on port ${config.port}`);
 });
 
 process.on("unhandledRejection", (reason) => {
