@@ -196,7 +196,7 @@ npm run dev
 
 ### API documentation:
 Open http://localhost:5000/api-docs
-
+![Swagger UI Screenshot](./docs/swagger.png)
 
 Testing
 
