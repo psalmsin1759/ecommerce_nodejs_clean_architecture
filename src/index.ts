@@ -1,11 +1,11 @@
 import express, { Request, Response, NextFunction } from "express";
 import { createServer } from "http";
-import { config } from "@/src/config/env";
+import { config } from "@/config/env";
 import cors from "cors"; 
-import { connectDB } from "@/src/config/db";
-import { setupSwagger } from "@/src/presentation/config/swagger";
-import categoryRouter from "@/src/presentation/http/routes/categoryRoutes"
-import productRouter from "@/src/presentation/http/routes/productRoutes"
+import { connectDB } from "@/config/db";
+import { setupSwagger } from "@/presentation/config/swagger";
+import categoryRouter from "@/presentation/http/routes/categoryRoutes"
+import productRouter from "@/presentation/http/routes/productRoutes"
 
 const app = express();
 const httpServer = createServer(app);

@@ -1,13 +1,13 @@
 import { Request, Response } from "express";
-import { ProductMongooseRepo } from "@/src/infrastructure/database/mongoose/ProductMongooseRepo";
-import { CreateProductSchema, UpdateProductSchema } from "@/src/application/validators/ProductValidator";
-import { CreateProduct } from "@/src/application/use-cases/product/CreateProduct";
-import { GetProductById } from "@/src/application/use-cases/product/GetProductById";
-import { GetProductBySlug } from "@/src/application/use-cases/product/GetProductBySlug";
-import { GetProductsByCategory } from "@/src/application/use-cases/product/GetProductsByCategory";
-import { GetAllProducts } from "@/src/application/use-cases/product/GetAllProducts";
-import { UpdateProduct } from "@/src/application/use-cases/product/UpdateProduct";
-import { DeleteProduct } from "@/src/application/use-cases/product/DeleteProduct";
+import { ProductMongooseRepo } from "@/infrastructure/database/mongoose/ProductMongooseRepo";
+import { CreateProductSchema, UpdateProductSchema } from "@/application/validators/ProductValidator";
+import { CreateProduct } from "@/application/use-cases/product/CreateProduct";
+import { GetProductById } from "@/application/use-cases/product/GetProductById";
+import { GetProductBySlug } from "@/application/use-cases/product/GetProductBySlug";
+import { GetProductsByCategory } from "@/application/use-cases/product/GetProductsByCategory";
+import { GetAllProducts } from "@/application/use-cases/product/GetAllProducts";
+import { UpdateProduct } from "@/application/use-cases/product/UpdateProduct";
+import { DeleteProduct } from "@/application/use-cases/product/DeleteProduct";
 
 const productRepo = new ProductMongooseRepo();
 

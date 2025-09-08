@@ -1,4 +1,4 @@
-import { CategoryRepository } from "@/src/domain/repositories/CategoryRepository";
+import { CategoryRepository } from "@/domain/repositories/CategoryRepository";
 
 export class DeleteCategory {
   constructor(private categoryRepo: CategoryRepository) {}

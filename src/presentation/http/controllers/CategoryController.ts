@@ -1,13 +1,13 @@
 import { Request, Response } from "express";
-import { CategoryMongooseRepo } from "@/src/infrastructure/database/mongoose/CategoryMongooseRepo";
-import { CreateCategory } from "@/src/application/use-cases/category/CreateCategory";
-import { GetAllCategories } from "@/src/application/use-cases/category/GetAllCategories";
-import { UpdateCategory } from "@/src/application/use-cases/category/UpdateCategory";
-import { DeleteCategory } from "@/src/application/use-cases/category/DeleteCategory";
+import { CategoryMongooseRepo } from "@/infrastructure/database/mongoose/CategoryMongooseRepo";
+import { CreateCategory } from "@/application/use-cases/category/CreateCategory";
+import { GetAllCategories } from "@/application/use-cases/category/GetAllCategories";
+import { UpdateCategory } from "@/application/use-cases/category/UpdateCategory";
+import { DeleteCategory } from "@/application/use-cases/category/DeleteCategory";
 import {
   CreateCategorySchema,
   UpdateCategorySchema,
-} from "@/src/application/validators/CategoryValidator";
+} from "@/application/validators/CategoryValidator";
 
 const categoryRepo = new CategoryMongooseRepo();
 
