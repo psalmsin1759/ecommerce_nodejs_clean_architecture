@@ -13,7 +13,8 @@ const options: swaggerJSDoc.Options = {
     },
     servers: [
       {
-        url: `${config.host}:${config.port}/api`,
+       /*  url: `${config.host}:${config.port}/api`, */
+        url: `${config.host}/api`,
       },
     ],
     components: {
