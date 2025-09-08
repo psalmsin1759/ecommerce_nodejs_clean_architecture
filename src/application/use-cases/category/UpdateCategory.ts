@@ -1,5 +1,5 @@
-import { CategoryRepository } from "@/domain/repositories/CategoryRepository";
-import { UpdateCategoryDTO } from "@/application/dto/CategoryDTO";
+import { CategoryRepository } from "../../../domain/repositories/CategoryRepository";
+import { UpdateCategoryDTO } from "../../../application/dto/CategoryDTO";
 
 export class UpdateCategory {
   constructor(private categoryRepo: CategoryRepository) {}

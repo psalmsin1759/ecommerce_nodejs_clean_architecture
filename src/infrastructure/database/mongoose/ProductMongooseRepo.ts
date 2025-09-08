@@ -1,5 +1,5 @@
-import { ProductRepository } from "@/domain/repositories/ProductRepository";
-import { Product } from "@/domain/entities/Product";
+import { ProductRepository } from "../../../domain/repositories/ProductRepository";
+import { Product } from "../../../domain/entities/Product";
 import { ProductModel, ProductDocument } from "./models/ProductModel";
 
 export class ProductMongooseRepo implements ProductRepository {

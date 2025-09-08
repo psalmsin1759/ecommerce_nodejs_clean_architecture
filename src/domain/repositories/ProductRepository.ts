@@ -1,5 +1,5 @@
-import { CreateProductDTO } from "@/application/dto/product/CreateProductDTO";
-import {UpdateProductDTO} from "@/application/dto/product/UpdateProductDTO";
+import { CreateProductDTO } from "../../application/dto/product/CreateProductDTO";
+import {UpdateProductDTO} from "../../application/dto/product/UpdateProductDTO";
 import { Product } from "../entities/Product";
 
 export interface ProductRepository {

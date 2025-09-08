@@ -1,5 +1,5 @@
 
-import { CreateCategoryDTO, UpdateCategoryDTO } from "@/application/dto/CategoryDTO";
+import { CreateCategoryDTO, UpdateCategoryDTO } from "../../application/dto/CategoryDTO";
 import { Category } from "../entities/Category";
 
 export interface CategoryRepository {

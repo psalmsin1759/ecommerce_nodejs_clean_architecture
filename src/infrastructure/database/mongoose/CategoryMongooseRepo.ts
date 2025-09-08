@@ -1,5 +1,5 @@
-import { Category } from "@/domain/entities/Category";
-import { CategoryRepository } from "@/domain/repositories/CategoryRepository";
+import { Category } from "../../../domain/entities/Category";
+import { CategoryRepository } from "../../../domain/repositories/CategoryRepository";
 import { CategoryModel } from "./models/CategoryModel";
 
 export class CategoryMongooseRepo implements CategoryRepository {

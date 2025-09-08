@@ -1,4 +1,4 @@
-import { CategoryRepository } from "@/domain/repositories/CategoryRepository";
+import { CategoryRepository } from "../../../domain/repositories/CategoryRepository";
 
 export class GetAllCategories {
   constructor(private categoryRepo: CategoryRepository) {}
