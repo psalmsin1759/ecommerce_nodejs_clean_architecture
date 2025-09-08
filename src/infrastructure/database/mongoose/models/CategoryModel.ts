@@ -2,6 +2,7 @@ import { Schema, model, Document } from "mongoose";
 
 export interface CategoryDoc extends Document {
   name: string;
+  slug: string;
   description?: string;
   createdAt: Date;
   updatedAt: Date;
@@ -10,6 +11,7 @@ export interface CategoryDoc extends Document {
 const CategorySchema = new Schema<CategoryDoc>(
   {
     name: { type: String, required: true, unique: true },
+    slug: { type: String, required: true, unique: true },
     description: { type: String },
   },
   { timestamps: true }

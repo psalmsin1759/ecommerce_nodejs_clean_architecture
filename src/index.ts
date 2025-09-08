@@ -5,6 +5,7 @@ import cors from "cors";
 import { connectDB } from "@/src/config/db";
 import { setupSwagger } from "@/src/presentation/config/swagger";
 import categoryRouter from "@/src/presentation/http/routes/categoryRoutes"
+import productRouter from "@/src/presentation/http/routes/productRoutes"
 
 const app = express();
 const httpServer = createServer(app);
@@ -23,6 +24,7 @@ connectDB().catch((err) => {
 
 app.use(express.json());
 app.use("/api/categories", categoryRouter);
+app.use("/api/products", productRouter);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Server running...");
