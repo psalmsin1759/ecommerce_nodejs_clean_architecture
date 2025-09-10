@@ -7,6 +7,7 @@ import { setupSwagger } from "./presentation/config/swagger";
 import categoryRouter from "./presentation/http/routes/categoryRoutes"
 import productRouter from "./presentation/http/routes/productRoutes"
 import orderRouter from "./presentation/http/routes/OrderRoutes";
+import adminRouter from "./presentation/http/routes/adminRoute";
 
 const app = express();
 const httpServer = createServer(app);
@@ -27,6 +28,7 @@ app.use(express.json());
 app.use("/api/categories", categoryRouter);
 app.use("/api/products", productRouter);
 app.use("/api/orders", orderRouter);
+app.use("/api/admins", adminRouter);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Server running...");

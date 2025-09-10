@@ -3,6 +3,7 @@ import swaggerUi from "swagger-ui-express";
 import { Express } from "express";
 import { config } from "../../config/env";
 
+
 const options: swaggerJSDoc.Options = {
   definition: {
     openapi: "3.0.0",
@@ -13,7 +14,7 @@ const options: swaggerJSDoc.Options = {
     },
     servers: [
       {
-          url: `${config.host}:${config.port}/api`, 
+        url: `${config.host}:${config.port}/api`,
         /* url: `${config.host}/api`, */
       },
     ],
@@ -26,6 +27,81 @@ const options: swaggerJSDoc.Options = {
         },
       },
       schemas: {
+        Admin: {
+          type: "object",
+          properties: {
+            id: { type: "string", example: "adm_001" },
+            name: { type: "string", example: "John Doe" },
+            email: { type: "string", example: "admin@example.com" },
+            phone: { type: "string", example: "+2348012345678" },
+            role: {
+              type: "string",
+              enum: ["super_admin", "manager", "editor", "viewer"],
+              example: "super_admin",
+            },
+            createdAt: { type: "string", format: "date-time" },
+            updatedAt: { type: "string", format: "date-time" },
+          },
+          required: ["name", "email", "role"],
+        },
+
+        CreateAdminDTO: {
+          type: "object",
+          properties: {
+            fullName: { type: "string", example: "John Doe" },
+            email: { type: "string", example: "admin@example.com" },
+            phone: { type: "string", example: "+2348012345678" },
+            password: { type: "string", example: "StrongPass123!" },
+            role: {
+              type: "string",
+              enum: ["super_admin", "manager", "editor", "viewer"],
+            },
+          },
+          required: ["fullName", "email", "password", "role"],
+        },
+
+        UpdateAdminDTO: {
+          type: "object",
+          properties: {
+            name: { type: "string" },
+            phone: { type: "string" },
+            role: {
+              type: "string",
+              enum: ["super_admin", "manager", "editor", "viewer"],
+            },
+          },
+        },
+
+        LoginAdminDTO: {
+          type: "object",
+          properties: {
+            email: { type: "string", example: "admin@example.com" },
+            password: { type: "string", example: "StrongPass123!" },
+          },
+          required: ["email", "password"],
+        },
+
+        ChangePasswordDTO: {
+          type: "object",
+          properties: {
+            oldPassword: { type: "string", example: "OldPass123!" },
+            newPassword: { type: "string", example: "NewPass456!" },
+          },
+          required: ["oldPassword", "newPassword"],
+        },
+
+        AssignRoleDTO: {
+          type: "object",
+          properties: {
+            adminId: { type: "string", example: "adm_001" },
+            role: {
+              type: "string",
+              enum: ["super_admin", "manager", "editor", "viewer"],
+            },
+          },
+          required: ["adminId", "role"],
+        },
+
         OrderItem: {
           type: "object",
           properties: {
