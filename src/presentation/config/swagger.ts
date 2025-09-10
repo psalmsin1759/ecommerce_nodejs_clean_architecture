@@ -13,8 +13,8 @@ const options: swaggerJSDoc.Options = {
     },
     servers: [
       {
-       /*  url: `${config.host}:${config.port}/api`, */
-        url: `${config.host}/api`,
+          url: `${config.host}:${config.port}/api`, 
+        /* url: `${config.host}/api`, */
       },
     ],
     components: {
@@ -26,10 +26,192 @@ const options: swaggerJSDoc.Options = {
         },
       },
       schemas: {
+        OrderItem: {
+          type: "object",
+          properties: {
+            productId: { type: "string", example: "prd_12345" },
+            sku: { type: "string", example: "TSHIRT-RED-M" },
+            name: { type: "string", example: "Red T-Shirt (M)" },
+            quantity: { type: "integer", example: 2 },
+            price: { type: "number", example: 45.99 },
+            discount: { type: "number", example: 5 },
+            tax: { type: "number", example: 2.5 },
+            subtotal: { type: "number", example: 87.48 },
+            imageUrl: {
+              type: "string",
+              example: "https://cdn.example.com/tshirt.jpg",
+            },
+            attributes: { type: "object", additionalProperties: true },
+          },
+          required: ["productId", "name", "quantity", "price", "subtotal"],
+        },
+
+        Customer: {
+          type: "object",
+          properties: {
+            id: { type: "string", example: "usr_001" },
+            name: { type: "string", example: "Jane Doe" },
+            email: { type: "string", example: "jane@example.com" },
+            phone: { type: "string", example: "+2348012345678" },
+          },
+          required: ["name", "email", "phone"],
+        },
+
+        Address: {
+          type: "object",
+          properties: {
+            fullName: { type: "string", example: "Jane Doe" },
+            street: { type: "string", example: "123 Main Street" },
+            city: { type: "string", example: "Lagos" },
+            state: { type: "string", example: "Lagos" },
+            postalCode: { type: "string", example: "100001" },
+            country: { type: "string", example: "Nigeria" },
+          },
+          required: [
+            "fullName",
+            "street",
+            "city",
+            "state",
+            "postalCode",
+            "country",
+          ],
+        },
+
+        Payment: {
+          type: "object",
+          properties: {
+            method: { type: "string", example: "card" },
+            transactionId: { type: "string", example: "txn_123abc" },
+            amountPaid: { type: "number", example: 100.0 },
+            currency: { type: "string", example: "NGN" },
+            status: {
+              type: "string",
+              enum: ["pending", "paid", "failed", "refunded"],
+              example: "paid",
+            },
+          },
+          required: ["method", "amountPaid", "currency", "status"],
+        },
+
+        Shipping: {
+          type: "object",
+          properties: {
+            method: { type: "string", example: "DHL Express" },
+            trackingNumber: { type: "string", example: "DHL123456789" },
+            cost: { type: "number", example: 20.5 },
+            estimatedDelivery: {
+              type: "string",
+              format: "date-time",
+              example: "2025-09-15",
+            },
+            status: {
+              type: "string",
+              enum: ["pending", "shipped", "in_transit", "delivered"],
+              example: "shipped",
+            },
+          },
+          required: ["method", "cost", "status"],
+        },
+
+        Totals: {
+          type: "object",
+          properties: {
+            subtotal: { type: "number", example: 100 },
+            discount: { type: "number", example: 10 },
+            tax: { type: "number", example: 5 },
+            shipping: { type: "number", example: 15 },
+            grandTotal: { type: "number", example: 110 },
+          },
+          required: ["subtotal", "shipping", "grandTotal"],
+        },
+
+        Order: {
+          type: "object",
+          properties: {
+            id: { type: "string", example: "ord_001" },
+            userId: { type: "string", example: "usr_001" },
+            orderDate: { type: "string", format: "date-time" },
+            status: {
+              type: "string",
+              enum: [
+                "pending",
+                "confirmed",
+                "shipped",
+                "delivered",
+                "cancelled",
+                "refunded",
+              ],
+              example: "pending",
+            },
+            items: {
+              type: "array",
+              items: { $ref: "#/components/schemas/OrderItem" },
+            },
+            customer: { $ref: "#/components/schemas/Customer" },
+            billingAddress: { $ref: "#/components/schemas/Address" },
+            shippingAddress: { $ref: "#/components/schemas/Address" },
+            payment: { $ref: "#/components/schemas/Payment" },
+            shipping: { $ref: "#/components/schemas/Shipping" },
+            totals: { $ref: "#/components/schemas/Totals" },
+            notes: {
+              type: "string",
+              nullable: true,
+              example: "Leave at the front door",
+            },
+            createdAt: { type: "string", format: "date-time" },
+            updatedAt: { type: "string", format: "date-time" },
+          },
+          required: [
+            "id",
+            "userId",
+            "status",
+            "items",
+            "customer",
+            "billingAddress",
+            "shippingAddress",
+            "payment",
+            "shipping",
+            "totals",
+            "createdAt",
+            "updatedAt",
+          ],
+        },
+
+        CreateOrderDTO: {
+          type: "object",
+          properties: {
+            userId: { type: "string" },
+            items: {
+              type: "array",
+              items: { $ref: "#/components/schemas/OrderItem" },
+            },
+            customer: { $ref: "#/components/schemas/Customer" },
+            billingAddress: { $ref: "#/components/schemas/Address" },
+            shippingAddress: { $ref: "#/components/schemas/Address" },
+            payment: { $ref: "#/components/schemas/Payment" },
+            shipping: { $ref: "#/components/schemas/Shipping" },
+            totals: { $ref: "#/components/schemas/Totals" },
+            notes: { type: "string", nullable: true },
+          },
+          required: [
+            "userId",
+            "items",
+            "customer",
+            "billingAddress",
+            "shippingAddress",
+            "payment",
+            "shipping",
+            "totals",
+          ],
+        },
+
         ProductImage: {
           type: "object",
           properties: {
-            url: { type: "string", example: "https://cdn.example.com/p/123-main.jpg" },
+            url: {
+              type: "string",
+              example: "https://cdn.example.com/p/123-main.jpg",
+            },
             alt: { type: "string", example: "Front view" },
             isPrimary: { type: "boolean", example: true },
           },
@@ -41,7 +223,11 @@ const options: swaggerJSDoc.Options = {
           properties: {
             name: { type: "string", example: "Color" },
             value: {
-              oneOf: [{ type: "string" }, { type: "number" }, { type: "boolean" }],
+              oneOf: [
+                { type: "string" },
+                { type: "number" },
+                { type: "boolean" },
+              ],
               example: "Red",
             },
             visible: { type: "boolean", example: true },
@@ -68,7 +254,13 @@ const options: swaggerJSDoc.Options = {
               items: { $ref: "#/components/schemas/ProductImage" },
             },
           },
-          required: ["sku", "price", "stockQuantity", "isInStock", "attributes"],
+          required: [
+            "sku",
+            "price",
+            "stockQuantity",
+            "isInStock",
+            "attributes",
+          ],
         },
 
         ProductReview: {

@@ -6,6 +6,7 @@ import { connectDB } from "./config/db";
 import { setupSwagger } from "./presentation/config/swagger";
 import categoryRouter from "./presentation/http/routes/categoryRoutes"
 import productRouter from "./presentation/http/routes/productRoutes"
+import orderRouter from "./presentation/http/routes/OrderRoutes";
 
 const app = express();
 const httpServer = createServer(app);
@@ -25,6 +26,7 @@ connectDB().catch((err) => {
 app.use(express.json());
 app.use("/api/categories", categoryRouter);
 app.use("/api/products", productRouter);
+app.use("/api/orders", orderRouter);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Server running...");
