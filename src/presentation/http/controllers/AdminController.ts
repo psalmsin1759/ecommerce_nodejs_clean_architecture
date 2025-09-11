@@ -8,8 +8,11 @@ import { ListAdminsUseCase } from "../../../application/use-cases/admin/ListAdmi
 import { LoginUseCase } from "../../../application/use-cases/admin/LoginUseCase";
 import { ChangePasswordUseCase } from "../../../application/use-cases/admin/ChangePasswordUseCase";
 import { AssignRoleUseCase } from "../../../application/use-cases/admin/AssignRoleUseCase";
+import { JwtService } from "../../../infrastructure/security/JwtService";
+import { config } from "../../../config/env";
 
 const repo = new MongoAdminRepository();
+const jwtService = new JwtService(config.jwtSecret);
 
 export class AdminController {
   async create(req: Request, res: Response) {
@@ -79,7 +82,7 @@ export class AdminController {
   async login(req: Request, res: Response) {
     try {
       const {email, password} = req.body;
-      const usecase = new LoginUseCase(repo);
+      const usecase = new LoginUseCase(repo, jwtService);
       const { admin, token } = await usecase.execute(
         email,
         password

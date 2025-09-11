@@ -4,7 +4,7 @@ import { IJwtService } from "../..//application/services/IJwtService";
 export class JwtService implements IJwtService {
   constructor(private secret: string) {}
 
-   sign(payload: object, expiresIn: number | string = "1h" ): string {
+   sign(payload: object): string {
     return jwt.sign(payload, this.secret as jwt.Secret,  { expiresIn: '1h' });
   }
 

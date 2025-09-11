@@ -1,4 +1,4 @@
 export interface IJwtService {
-  sign(payload: object, expiresIn?: string): string;
+  sign(payload: object): string;
   verify<T>(token: string): T | null;
 }
