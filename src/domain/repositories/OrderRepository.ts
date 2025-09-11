@@ -10,8 +10,9 @@ export interface OrderFilter {
 }
 
 export interface GraphPoint {
-  period: string;
-  value: number;
+  month: string;
+  count: number;
+  total: number;
 }
 
 export interface OrderRepository {
@@ -23,17 +24,9 @@ export interface OrderRepository {
 
   countByDate(
     truncateTo: "day" | "week" | "month" | "year",
-    from?: string,
-    to?: string
-  ): Promise<{ period: string; count: number }[]>;
+  ): Promise<{  count: number }>;
   totalByDate(
     truncateTo: "day" | "week" | "month" | "year",
-    from?: string,
-    to?: string
-  ): Promise<{ period: string; total: number }[]>;
-  graphData(
-    truncateTo: "day" | "week" | "month" | "year",
-    from?: string,
-    to?: string
-  ): Promise<GraphPoint[]>;
+  ): Promise<{ total: number }>;
+  graphData(): Promise<GraphPoint[]>;
 }

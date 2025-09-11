@@ -1,10 +1,11 @@
-import { OrderRepository } from "../../../domain/repositories/OrderRepository";
+import {
+  OrderRepository,
+  GraphPoint,
+} from "../../../domain/repositories/OrderRepository";
 import { Order } from "../../../domain/entities/Order";
 import { OrderModel } from "./models/OrderModel";
-import mongoose from "mongoose";
 
 export class MongoOrderRepository implements OrderRepository {
-    
   async create(order: Order): Promise<Order> {
     const doc = await OrderModel.create({
       ...order,
@@ -55,64 +56,106 @@ export class MongoOrderRepository implements OrderRepository {
     ]);
     return { items: items as unknown as Order[], total };
   }
-  private buildDateMatch(from?: string, to?: string) {
-    const match: any = {};
-    if (from || to) match.orderDate = {};
-    if (from) match.orderDate.$gte = new Date(from);
-    if (to) match.orderDate.$lte = new Date(to);
-    return Object.keys(match).length ? match : null;
+  private getDateRange(truncateTo: "day" | "week" | "month" | "year") {
+    const now = new Date();
+    let start: Date;
+    let end: Date;
+
+    switch (truncateTo) {
+      case "day":
+        start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        end = new Date(start);
+        end.setDate(start.getDate() + 1);
+        break;
+      case "week":
+        const dayOfWeek = now.getDay();
+        start = new Date(now);
+        start.setDate(now.getDate() - dayOfWeek);
+        start.setHours(0, 0, 0, 0);
+        end = new Date(start);
+        end.setDate(start.getDate() + 7);
+        break;
+      case "month":
+        start = new Date(now.getFullYear(), now.getMonth(), 1);
+        end = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+        break;
+      case "year":
+        start = new Date(now.getFullYear(), 0, 1);
+        end = new Date(now.getFullYear() + 1, 0, 1);
+        break;
+    }
+    return { start, end };
   }
 
   async countByDate(
-    truncateTo: "day" | "week" | "month" | "year",
-    from?: string,
-    to?: string
-  ) {
-    const match = this.buildDateMatch(from, to);
-    const groupBy = { $dateTrunc: { date: "$orderDate", unit: truncateTo } };
-    const pipeline: any[] = [];
-    if (match) pipeline.push({ $match: match });
-    pipeline.push({ $group: { _id: groupBy, count: { $sum: 1 } } });
-    pipeline.push({ $sort: { _id: 1 } });
-    pipeline.push({ $project: { period: "$_id", count: 1, _id: 0 } });
-
-    const res = await OrderModel.aggregate(pipeline);
-    return res.map((r: any) => ({
-      period: r.period.toISOString(),
-      count: r.count,
-    }));
-  }
-  async totalByDate(
-    truncateTo: "day" | "week" | "month" | "year",
-    from?: string,
-    to?: string
-  ) {
-    const match = this.buildDateMatch(from, to);
-    const groupBy = { $dateTrunc: { date: "$orderDate", unit: truncateTo } };
-    const pipeline: any[] = [];
-    if (match) pipeline.push({ $match: match });
-    pipeline.push({
-      $group: { _id: groupBy, total: { $sum: "$totals.grandTotal" } },
+    truncateTo: "day" | "week" | "month" | "year"
+  ): Promise<{ count: number }> {
+    const { start, end } = this.getDateRange(truncateTo);
+    const count = await OrderModel.countDocuments({
+      orderDate: { $gte: start, $lt: end },
     });
-    pipeline.push({ $sort: { _id: 1 } });
-    pipeline.push({ $project: { period: "$_id", total: 1, _id: 0 } });
-
-    const res = await OrderModel.aggregate(pipeline);
-    return res.map((r: any) => ({
-      period: r.period.toISOString(),
-      total: r.total,
-    }));
+    return { count };
   }
 
-  async graphData(
-    truncateTo: "day" | "week" | "month" | "year",
-    from?: string,
-    to?: string
-  ) {
-    // reuse totalByDate and normalize to GraphPoint
-    const totals = await this.totalByDate(truncateTo, from, to);
-    return totals.map((t) => ({ period: t.period, value: t.total }));
+  async totalByDate(
+    truncateTo: "day" | "week" | "month" | "year"
+  ): Promise<{ total: number }> {
+    const { start, end } = this.getDateRange(truncateTo);
+
+    const result = await OrderModel.aggregate([
+      {
+        $match: {
+          orderDate: { $gte: start, $lt: end },
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          total: { $sum: "$totals.grandTotal" },
+        },
+      },
+    ]);
+
+    return { total: result[0]?.total || 0 };
   }
+
+  async graphData(): Promise<GraphPoint[]> {
+  const now = new Date();
+  const year = now.getFullYear();
+  const start = new Date(year, 0, 1);
+  const end = new Date(year + 1, 0, 1);
+
+  const result = await OrderModel.aggregate([
+    {
+      $match: {
+        orderDate: { $gte: start, $lt: end },
+      },
+    },
+    {
+      $group: {
+        _id: { month: { $month: "$orderDate" } },
+        count: { $sum: 1 },
+        total: { $sum: "$totals.grandTotal" },
+      },
+    },
+    { $sort: { "_id.month": 1 } },
+  ]);
+
+  const months = [
+    "Jan","Feb","Mar","Apr","May","Jun",
+    "Jul","Aug","Sep","Oct","Nov","Dec",
+  ];
+
+  return months.map((m, i) => {
+    const found = result.find((r) => r._id.month === i + 1);
+    return {
+      month: m,
+      count: found ? found.count : 0,
+      total: found ? found.total : 0,
+    };
+  });
+}
+
 
   private toDomain(doc: any): Order {
     const d = doc.toObject ? doc.toObject() : doc;

@@ -1,14 +1,12 @@
 import { OrderRepository } from "../../../domain/repositories/OrderRepository";
 
-export class AnalyticsUseCase {
+export class GetOrderCountUseCase {
   constructor(private repo: OrderRepository) {}
 
   async execute(
     truncateTo: "day" | "week" | "month" | "year",
   ) {
     const counts = await this.repo.countByDate(truncateTo);
-    const totals = await this.repo.totalByDate(truncateTo);
-    const graph = await this.repo.graphData(truncateTo);
-    return { counts, totals, graph };
+    return counts;
   }
 }

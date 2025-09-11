@@ -244,10 +244,128 @@ orderRouter.get("/", (req, res) => controller.list(req, res));
  *                       count:
  *                         type: number
  */
-orderRouter.get(
+/* orderRouter.get(
   "/analytics/:truncateTo",
   validate(AnalyticsValidator, "params"),
   (req, res) => controller.analytics(req, res)
+); */
+
+
+/**
+ * @openapi
+ * /orders/count/{truncateTo}:
+ *   get:
+ *     summary: Get order analytics
+ *     tags: [Orders]
+ *     parameters:
+ *       - name: truncateTo
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *           enum: [day, week, month, year]
+ *       
+ *     responses:
+ *       200:
+ *         description: Analytics data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 count:
+ *                   type: number
+ *                 totalAmount:
+ *                   type: number
+ *                 graphData:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       date:
+ *                         type: string
+ *                       count:
+ *                         type: number
+ */
+orderRouter.get(
+  "/count/:truncateTo",
+  (req, res) => controller.count(req, res)
+);
+
+/**
+ * @openapi
+ * /orders/total/{truncateTo}:
+ *   get:
+ *     summary: Get order analytics
+ *     tags: [Orders]
+ *     parameters:
+ *       - name: truncateTo
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *           enum: [day, week, month, year]
+ *       
+ *     responses:
+ *       200:
+ *         description: Analytics data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 total:
+ *                   type: number
+ *                 totalAmount:
+ *                   type: number
+ *                 graphData:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       date:
+ *                         type: string
+ *                       count:
+ *                         type: number
+ */
+orderRouter.get(
+  "/total/:truncateTo",
+  (req, res) => controller.total(req, res)
+);
+
+
+/**
+ * @openapi
+ * /orders/graph/data:
+ *   get:
+ *     summary: Get order analytics
+ *     tags: [Orders]
+ *       
+ *     responses:
+ *       200:
+ *         description: Analytics data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 count:
+ *                   type: number
+ *                 totalAmount:
+ *                   type: number
+ *                 graphData:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       date:
+ *                         type: string
+ *                       count:
+ *                         type: number
+ */
+orderRouter.get(
+  "/graph/data",
+  (req, res) => controller.graph(req, res)
 );
 
 export default orderRouter;
