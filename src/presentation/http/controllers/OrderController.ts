@@ -9,6 +9,8 @@ import { ListOrdersUseCase } from "../../../application/use-cases/order/ListOrde
 import { GetOrderTotalUseCase } from "../../../application/use-cases/order/GetOrderTotalUseCase";
 import { GetOrderCountUseCase } from "../../../application/use-cases/order/GetOrderCountUseCase";
 import { GetOrderGraphDataUseCase } from "../../../application/use-cases/order/GetOrderGraphData";
+import { TopSellingUseCase } from "../../../application/use-cases/order/TopSellngUseCase";
+import { OrderFilter } from "../../../domain/repositories/OrderRepository";
 
 const repo = new MongoOrderRepository();
 
@@ -75,14 +77,41 @@ export class OrderController {
   async list(req: Request, res: Response) {
     try {
       const useCase = new ListOrdersUseCase(repo);
-      const filter = {
-        status: req.query.status as string,
-        userId: req.query.userId as string,
-        from: req.query.from as string,
-        to: req.query.to as string,
-        page: parseInt(req.query.page as string) || 1,
-        limit: parseInt(req.query.limit as string) || 20,
+
+      const filter: OrderFilter = {
+       status: req.query.status as OrderFilter["status"] | undefined,
+        paymentStatus:
+          (req.query.paymentStatus as OrderFilter["paymentStatus"]) ??
+          undefined,
+        shippingStatus: req.query.shippingStatus
+          ? String(req.query.shippingStatus)
+          : undefined,
+
+        userId: req.query.userId ? String(req.query.userId) : undefined,
+        customerEmail: req.query.customerEmail
+          ? String(req.query.customerEmail)
+          : undefined,
+        customerPhone: req.query.customerPhone
+          ? String(req.query.customerPhone)
+          : undefined,
+
+        from: req.query.from ? String(req.query.from) : undefined,
+        to: req.query.to ? String(req.query.to) : undefined,
+
+        search: req.query.search ? String(req.query.search) : undefined,
+
+        page: req.query.page ? parseInt(req.query.page as string, 10) : 1,
+        limit: req.query.limit ? parseInt(req.query.limit as string, 10) : 20,
+
+        sortBy: (req.query.sortBy as OrderFilter["sortBy"]) ?? undefined,
+        sortOrder: (req.query.sortOrder as "asc" | "desc") ?? "desc",
       };
+
+     
+      if (filter.limit && filter.limit > 100) {
+        filter.limit = 100;
+      }
+
       const list = await useCase.execute(filter);
       res.json(list);
     } catch (err: any) {
@@ -90,19 +119,8 @@ export class OrderController {
     }
   }
 
-  /* async analytics(req: Request, res: Response) {
-    try {
-      const { truncateTo } = req.params as any;
-      const { from, to } = req.query as any;
-      const useCase = new AnalyticsUseCase(repo);
-      const result = await useCase.execute(truncateTo, from, to);
-      res.json(result);
-    } catch (err: any) {
-      res.status(500).json({ error: err.message });
-    }
-  } */
 
-   async count(req: Request, res: Response) {
+  async count(req: Request, res: Response) {
     try {
       const { truncateTo } = req.params as any;
       const useCase = new GetOrderCountUseCase(repo);
@@ -113,7 +131,7 @@ export class OrderController {
     }
   }
 
-   async total(req: Request, res: Response) {
+  async total(req: Request, res: Response) {
     try {
       const { truncateTo } = req.params as any;
       const useCase = new GetOrderTotalUseCase(repo);
@@ -124,11 +142,22 @@ export class OrderController {
     }
   }
 
-   async graph(req: Request, res: Response) {
-    console.log ("start")
+  async graph(req: Request, res: Response) {
+    
     try {
       const useCase = new GetOrderGraphDataUseCase(repo);
       const result = await useCase.execute();
+      res.json(result);
+    } catch (err: any) {
+      res.status(500).json({ error: err.message });
+    }
+  }
+
+  async topSeller(req: Request, res: Response) {
+    try {
+      const { truncateTo } = req.params as any;
+      const useCase = new TopSellingUseCase(repo);
+      const result = await useCase.execute(truncateTo);
       res.json(result);
     } catch (err: any) {
       res.status(500).json({ error: err.message });

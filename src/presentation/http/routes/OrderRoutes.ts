@@ -50,6 +50,104 @@ orderRouter.post("/", validate(CreateOrderValidator), (req, res) =>
   controller.create(req, res)
 );
 
+
+/**
+ * @openapi
+ * /orders:
+ *   get:
+ *     summary: List orders with filters
+ *     tags: [Orders]
+ *     parameters:
+ *       - in: query
+ *         name: status
+ *         schema:
+ *           type: string
+ *           enum: [pending, confirmed, shipped, in_transit, delivered, cancelled, refunded]
+ *       - in: query
+ *         name: paymentStatus
+ *         schema:
+ *           type: string
+ *           enum: [pending, paid, failed, refunded]
+ *       - in: query
+ *         name: shippingStatus
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: userId
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: customerEmail
+ *         schema:
+ *           type: string
+ *           format: email
+ *       - in: query
+ *         name: customerPhone
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: from
+ *         schema:
+ *           type: string
+ *           format: date-time
+ *       - in: query
+ *         name: to
+ *         schema:
+ *           type: string
+ *           format: date-time
+ *       - in: query
+ *         name: search
+ *         schema:
+ *           type: string
+ *           description: Search by orderId, customer name, or SKU
+ *       - in: query
+ *         name: sortBy
+ *         schema:
+ *           type: string
+ *           enum: [orderDate, total, status]
+ *       - in: query
+ *         name: sortOrder
+ *         schema:
+ *           type: string
+ *           enum: [asc, desc]
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           maximum: 100
+ *     responses:
+ *       200:
+ *         description: Orders retrieved
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 items:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Order'
+ *                 total:
+ *                   type: integer
+ *                 page:
+ *                   type: integer
+ *                 limit:
+ *                   type: integer
+ *                 totalPages:
+ *                   type: integer
+ *                 hasNextPage:
+ *                   type: boolean
+ *                 hasPrevPage:
+ *                   type: boolean
+ */
+orderRouter.get("/", (req, res) => controller.list(req, res));
+
 /**
  * @openapi
  * /orders/{id}:
@@ -163,42 +261,7 @@ orderRouter.post("/:id/cancel", validate(CancelOrderValidator), (req, res) =>
 orderRouter.post("/:id/refund", validate(RefundOrderValidator), (req, res) =>
   controller.refund(req, res)
 );
-/**
- * @openapi
- * /orders:
- *   get:
- *     summary: List orders with filters
- *     tags: [Orders]
- *     parameters:
- *       - name: status
- *         in: query
- *         schema:
- *           type: string
- *       - name: userId
- *         in: query
- *         schema:
- *           type: string
- *       - name: from
- *         in: query
- *         schema:
- *           type: string
- *           format: date-time
- *       - name: to
- *         in: query
- *         schema:
- *           type: string
- *           format: date-time
- *     responses:
- *       200:
- *         description: Orders retrieved
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Order'
- */
-orderRouter.get("/", (req, res) => controller.list(req, res));
+
 /**
  * @openapi
  * /orders/analytics/{truncateTo}:
@@ -331,6 +394,48 @@ orderRouter.get(
 orderRouter.get(
   "/total/:truncateTo",
   (req, res) => controller.total(req, res)
+);
+
+
+/**
+ * @openapi
+ * /orders/top/seller/{truncateTo}:
+ *   get:
+ *     summary: Get order analytics
+ *     tags: [Orders]
+ *     parameters:
+ *       - name: truncateTo
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *           enum: [day, week, month, year]
+ *       
+ *     responses:
+ *       200:
+ *         description: Analytics data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 total:
+ *                   type: number
+ *                 totalAmount:
+ *                   type: number
+ *                 graphData:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       date:
+ *                         type: string
+ *                       count:
+ *                         type: number
+ */
+orderRouter.get(
+  "/top/seller/:truncateTo",
+  (req, res) => controller.topSeller(req, res)
 );
 
 
