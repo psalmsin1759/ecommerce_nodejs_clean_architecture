@@ -198,11 +198,20 @@ npm run dev
 Open http://localhost:5000/api-docs
 ![Swagger UI Screenshot](./docs/swagger.png)
 
-Testing
+### Testing
 
 Run all tests:
 
 ```bash
 npm test
+
+```
+
+### Seeding
+
+Seed orders, products, customers:
+
+```bash
+npm run seed
 
 ```
