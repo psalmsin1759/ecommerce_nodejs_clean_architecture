@@ -233,7 +233,7 @@ export class MongoOrderRepository implements OrderRepository {
         },
       },
       { $sort: { count: -1 } },
-      { $limit: 10 },
+      { $limit: 4 },
     ]);
 
     return result.map((r) => ({
