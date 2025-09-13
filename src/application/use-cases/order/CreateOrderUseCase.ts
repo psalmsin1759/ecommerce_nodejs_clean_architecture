@@ -1,7 +1,6 @@
 import { OrderRepository } from "../../../domain/repositories/OrderRepository";
 import { CreateOrderDTO } from "../../dto/order/OrderDTO";
 import { Order } from "../../../domain/entities/Order";
-import { v4 as uuidv4 } from "uuid";
 
 export class CreateOrderUseCase {
   constructor(private repo: OrderRepository) {}

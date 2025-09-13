@@ -70,6 +70,8 @@ export class MongoOrderRepository implements OrderRepository {
       query.$or = [
         { id: { $regex: filter.search, $options: "i" } },
         { "customer.name": { $regex: filter.search, $options: "i" } },
+        { "customer.email": { $regex: filter.search, $options: "i" } },
+         { "customer.phone": { $regex: filter.search, $options: "i" } },
         { "items.sku": { $regex: filter.search, $options: "i" } },
       ];
     }

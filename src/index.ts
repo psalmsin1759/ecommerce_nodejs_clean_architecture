@@ -8,6 +8,7 @@ import categoryRouter from "./presentation/http/routes/categoryRoutes"
 import productRouter from "./presentation/http/routes/productRoutes"
 import orderRouter from "./presentation/http/routes/OrderRoutes";
 import adminRouter from "./presentation/http/routes/adminRoute";
+import userRouter from "./presentation/http/routes/userRoute";
 
 const app = express();
 const httpServer = createServer(app);
@@ -29,6 +30,7 @@ app.use("/api/categories", categoryRouter);
 app.use("/api/products", productRouter);
 app.use("/api/orders", orderRouter);
 app.use("/api/admins", adminRouter);
+app.use("/api/users", userRouter);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Server running...");
